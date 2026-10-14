@@ -198,7 +198,7 @@ QCoro::Task<void> KeyboardBrightnessControl::onActionSupported()
         co_return;
     }
 
-    m_isBrightnessAvailable = true;
+    m_isBrightnessAvailable = m_maxBrightness.value() > 0;
 }
 
 void KeyboardBrightnessControl::onActionUnsupported()

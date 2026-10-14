@@ -33,7 +33,7 @@ KeyboardBrightnessController::KeyboardBrightnessController()
 
     QDBusPendingReply<int> rep = m_kbdBacklight->GetMaxBrightness();
     rep.waitForFinished();
-    if (rep.isValid()) {
+    if (rep.isValid() && rep.value() > 0) {
         m_maxBrightness = rep.value();
         m_isSupported = true;
         m_cachedBrightness = brightness();
@@ -42,6 +42,10 @@ KeyboardBrightnessController::KeyboardBrightnessController()
                 &OrgFreedesktopUPowerKbdBacklightInterface::BrightnessChangedWithSource,
                 this,
                 &KeyboardBrightnessController::onBrightnessChanged);
+    } else if (rep.isValid()) {
+        // UPower may export its composite keyboard backlight object even when no keyboard
+        // backlight is present, in which case it reports a maximum brightness of 0
+        qCDebug(POWERDEVIL) << "No keyboard backlight available, maximum brightness is" << rep.value();
     } else {
         // Don't warn when no keyboard backlight is available, only for other errors
         if (rep.error().type() != QDBusError::UnknownMethod) {

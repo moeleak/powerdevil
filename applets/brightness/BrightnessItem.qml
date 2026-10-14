@@ -31,7 +31,7 @@ PlasmaComponents3.ItemDelegate {
         control.value: root.value
     }
 
-    readonly property real percentage: Math.round(100 * value / maximumValue)
+    readonly property real percentage: maximumValue > 0 ? Math.round(100 * value / maximumValue) : 0
     readonly property string brightnessLevelOff: i18nc("Backlight on or off", "Off")
     readonly property string brightnessLevelLow: i18nc("Brightness level", "Low")
     readonly property string brightnessLevelMedium: i18nc("Brightness level", "Medium")
